@@ -1,0 +1,268 @@
+/* =========================================================
+   DICE ROLL APP - STYLES (beginner-friendly version)
+   How to read CSS:   selector { property: value; }
+   - selector  = WHICH element to style
+   - property  = WHAT to change
+   - value     = HOW to change it
+   ========================================================= */
+
+
+/* ---------- 1. COLORS (VARIABLES) ----------
+   Variables let us store a color once and reuse it everywhere.
+   Define:  --name: value;     Use:  var(--name)
+   Change a color here and it updates across the whole page. */
+:root {
+  --bg: black;      /* page background (black) */
+  --bg2: midnightblue;     /* lighter blue for the glow at the top */
+  --fg: aliceblue;      /* text color */
+  --line: slategray;    /* thin border lines */
+  --glow: deepskyblue;    /* light-blue glow color */
+  --accent: crimson;  /* red: buttons and the dice dot for "1" */
+  --panel: black;   /* dark panel color */
+  color-scheme: dark;
+}
+
+/* Light theme: if the user's device is set to light mode,
+   swap the colors. Only the variables change - nothing else. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: beige;
+    --bg2: wheat;
+    --fg: midnightblue;
+    --line: tan;
+    --glow: dodgerblue;
+    --panel: midnightblue;
+    color-scheme: light;
+  }
+}
+
+/* Same light colors, but used when the page is forced to light
+   (for example data-theme="light" on the <html> tag). */
+:root[data-theme="light"] {
+  --bg: beige;
+  --bg2: wheat;
+  --fg: midnightblue;
+  --line: tan;
+  --glow: dodgerblue;
+  --panel: midnightblue;
+  color-scheme: light;
+}
+
+
+/* ---------- 2. PAGE BASICS ---------- */
+
+/* Keeps content away from phone notches / system bars */
+html {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* The whole page */
+body {
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at 50% 0%, var(--bg2), var(--bg) 70%);
+  color: var(--fg);
+  text-align: center;   /* center all text */
+  margin: 0;            /* remove default outer space */
+  padding: 20px;        /* space inside the page edges */
+  min-height: 100vh;    /* at least the full screen height */
+}
+
+/* Main title */
+h1 {
+  margin: 0 0 4px;
+  letter-spacing: 3px;          /* space between letters */
+  text-transform: uppercase;    /* ALL CAPS */
+  text-shadow: 0 0 14px var(--glow);
+}
+
+/* Small subtitle (class "sub" -> written as .sub) */
+.sub {
+  margin: 0 0 20px;
+  opacity: 0.75;        /* slightly faded */
+  font-style: italic;
+}
+
+
+/* ---------- 3. THE ARENA (box that holds the dice) ----------
+   #name  = style the element with id="name"
+   .name  = style elements with class="name" */
+
+#arena {
+  position: relative;
+  overflow: hidden;         /* hide anything sticking out */
+  max-width: 600px;
+  margin: 0 auto;           /* "auto" on the sides = centered */
+  border-radius: 15px;      /* rounded corners */
+  background: radial-gradient(circle at 50% 40%, midnightblue, var(--panel));
+  border: 2px solid var(--glow);
+  box-shadow:
+    0 0 22px deepskyblue,                      /* outer glow */
+    inset 0 0 40px midnightblue;                /* inner shadow */
+}
+
+/* Area where dice appear. "flex" lays dice out in a row
+   and wraps them to the next line if there is no space. */
+#table {
+  position: relative;
+  z-index: 1;
+  padding: 30px 10px;
+  min-height: 200px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  /* center horizontally */
+  align-items: center;      /* center vertically */
+  gap: 15px;                /* space between dice */
+}
+
+
+/* ---------- 4. THE DICE ---------- */
+
+/* One die: a white rounded square with a 3x3 grid inside
+   (the grid is where the dots/pips sit) */
+.die {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, white, lightsteelblue);
+  border-radius: 12px;
+  padding: 8px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);   /* 3 equal columns */
+  grid-template-rows: repeat(3, 1fr);      /* 3 equal rows */
+  box-shadow: 0 4px 12px black;
+}
+
+/* ".die.rolling" = an element that has BOTH classes: die AND rolling.
+   JavaScript adds "rolling" while the dice are rolling. */
+.die.rolling {
+  box-shadow: 0 0 18px var(--glow);
+}
+
+/* JavaScript adds "landed" when the die stops -> plays the "pop" animation */
+.die.landed {
+  animation: pop 0.4s ease-out;
+}
+
+/* A single dot on the die */
+.pip {
+  background: black;
+  border-radius: 50%;   /* 50% makes a perfect circle */
+  margin: 15%;
+}
+
+/* If the die shows 1, its dot turns red */
+.one .pip {
+  background: var(--accent);
+}
+
+/* The "pop" animation: starts big and tilted, then settles to normal.
+   0% = start, 60% = middle, 100% = end */
+@keyframes pop {
+  0%   { transform: scale(1.5) rotate(-12deg); }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+
+/* ---------- 5. TOTAL, BUTTONS AND INPUTS ---------- */
+
+/* The total score text */
+#total {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 20px 0;
+  text-shadow: 0 0 10px var(--glow);
+}
+
+#controls {
+  margin-bottom: 30px;
+}
+
+/* All buttons (the red Roll button) */
+button {
+  font-size: 18px;
+  padding: 12px 24px;       /* space inside the button */
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, tomato, var(--accent));
+  color: white;
+  font-weight: bold;
+  cursor: pointer;          /* hand icon on hover */
+  box-shadow: 0 0 12px crimson;
+}
+
+/* A button that can't be clicked right now looks faded */
+button:disabled {
+  opacity: 0.5;
+}
+
+/* The Clear button: this overrides the red style above
+   to make it a plain, smaller, see-through button */
+#clearButton {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  box-shadow: none;
+  font-size: 14px;
+  padding: 8px 16px;
+}
+
+/* Text label before the dropdown */
+label {
+  font-size: 18px;
+  font-weight: bold;
+  color: gold;
+  background: var(--panel);
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Dropdown menu (choose how many dice) */
+select {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 6px 10px;
+  margin-left: 8px;
+  color: white;
+  background: midnightblue;
+  border: 2px solid var(--glow);
+  border-radius: 6px;
+}
+
+
+/* ---------- 6. HISTORY LIST ---------- */
+
+#history {
+  list-style: none;     /* remove bullet points */
+  padding: 0;
+  margin: 0 0 15px;
+}
+
+/* "#history li" = every <li> inside #history */
+#history li {
+  padding: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+
+/* ---------- 7. RESPONSIVE / ACCESSIBILITY ---------- */
+
+/* On small screens (500px wide or less), make dice smaller */
+@media (max-width: 500px) {
+  .die {
+    width: 65px;
+    height: 65px;
+  }
+}
+
+/* If the user's device asks for less motion, turn off the animation */
+@media (prefers-reduced-motion: reduce) {
+  .die.landed {
+    animation: none;
+  }
+}

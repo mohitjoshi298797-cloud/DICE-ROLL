@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DICE ROLL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>DICE ROLL</h1>
+  <p class="sub">Roll the dice.</p>
+
+  <div id="arena">
+    <div id="table"></div>
+  </div>
+
+  <p id="total">Press the button to roll!</p>
+
+  <div id="controls">
+    <label>
+      Number of dice:
+      <select id="diceCount">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+    </label>
+    <button id="rollButton">Roll dice</button>
+  </div>
+
+  <h2>Last rolls</h2>
+  <ul id="history"></ul>
+  <button id="clearButton">Clear history</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
